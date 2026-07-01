@@ -1,0 +1,1017 @@
+/* ==========================================================================
+   RACO TERMINAL — Consola de nave espacial / terminal retrofuturista 1983
+   Estética industrial: metal, remaches, botones físicos, pantalla CRT verde.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. RESET Y BASE
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  background: #050505;
+  color: #cfcfc8;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Fondo ambiental detrás de la consola (sala / taller oscuro) */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(60, 70, 65, 0.25), transparent 60%),
+    repeating-linear-gradient(
+      0deg,
+      #0a0b0a 0px,
+      #0a0b0a 2px,
+      #0c0d0c 2px,
+      #0c0d0c 4px
+    ),
+    linear-gradient(180deg, #060707 0%, #020202 100%);
+}
+
+/* --------------------------------------------------------------------------
+   2. VARIABLES DE COLOR / MATERIAL
+   -------------------------------------------------------------------------- */
+:root {
+  --metal-1: #3b3e3c;
+  --metal-2: #2a2c2b;
+  --metal-3: #1c1e1d;
+  --metal-dark: #131413;
+  --metal-rust: #4a4136;
+  --bolt-color: #8a8a82;
+
+  --red-1: #b5402a;
+  --red-2: #8a2c1d;
+  --red-3: #5e1d12;
+  --cream: #e8dfc8;
+  --cream-dim: #c9bfa0;
+
+  --blue-1: #2f6fa3;
+  --blue-2: #1f4f7a;
+  --blue-3: #143654;
+
+  --crt-bg: #03110a;
+  --crt-green: #5dffa0;
+  --crt-green-dim: #2f8f5f;
+  --crt-glow: rgba(93, 255, 160, 0.55);
+
+  --screen-w: 420px;
+}
+
+/* --------------------------------------------------------------------------
+   3. CONSOLA — carcasa principal
+   -------------------------------------------------------------------------- */
+.console {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  height: 100dvh;
+  max-height: 980px;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(155deg, var(--metal-1) 0%, var(--metal-2) 45%, var(--metal-3) 100%);
+  border: 2px solid #111;
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.04),
+    inset 0 2px 4px rgba(255, 255, 255, 0.08),
+    inset 0 -6px 18px rgba(0, 0, 0, 0.6),
+    0 0 0 6px #0c0c0c,
+    0 20px 60px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  padding: 10px 10px 0;
+}
+
+/* Textura metálica de cepillado (brushed metal): doble dirección de rayado
+   más marcada, para que se lea como chapa trabajada y no como superficie
+   plana/digital. */
+.console::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+  background-image:
+    repeating-linear-gradient(
+      97deg,
+      rgba(255, 255, 255, 0.045) 0px,
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      183deg,
+      rgba(0, 0, 0, 0.05) 0px,
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 5px
+    ),
+    linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.05) 48%,
+      transparent 60%
+    );
+  mix-blend-mode: overlay;
+}
+
+/* Manchas, óxido y un puñado de rayones para look físico "usado" */
+.console::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 12% 92%, rgba(130, 85, 40, 0.16), transparent 28%),
+    radial-gradient(circle at 92% 88%, rgba(130, 85, 40, 0.12), transparent 22%),
+    radial-gradient(circle at 85% 8%, rgba(0, 0, 0, 0.3), transparent 32%),
+    radial-gradient(circle at 6% 6%, rgba(0, 0, 0, 0.25), transparent 28%),
+    linear-gradient(78deg, transparent 38%, rgba(255, 255, 255, 0.035) 39%, transparent 40%),
+    linear-gradient(64deg, transparent 64%, rgba(255, 255, 255, 0.03) 65%, transparent 66%),
+    linear-gradient(110deg, transparent 81%, rgba(0, 0, 0, 0.18) 82%, transparent 83%);
+}
+
+/* Tornillos genéricos */
+.bolt-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.bolt {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3e9c8 0%, #b89a64 45%, #5c3f22 80%, #2a1c0f 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 0 1px rgba(0, 0, 0, 0.6);
+}
+/* Ranura en cruz de un tornillo Phillips, dibujada con dos líneas */
+.bolt::before,
+.bolt::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: rgba(0, 0, 0, 0.55);
+}
+.bolt::before {
+  width: 64%;
+  height: 1px;
+  transform: translate(-50%, -50%);
+}
+.bolt::after {
+  width: 1px;
+  height: 64%;
+  transform: translate(-50%, -50%);
+}
+
+/* --------------------------------------------------------------------------
+   4. PLACA SUPERIOR ROJA — título del encuentro
+   -------------------------------------------------------------------------- */
+.header-plate {
+  position: relative;
+  z-index: 2;
+  margin: 6px 2px 10px;
+}
+
+.header-plate__frame {
+  position: relative;
+  background: linear-gradient(180deg, var(--red-1) 0%, var(--red-2) 55%, var(--red-3) 100%);
+  border-radius: 6px;
+  padding: 14px 10px;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.45),
+    0 0 0 2px #1a1a1a,
+    0 0 0 4px #4a4a46,
+    0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.header-plate__title {
+  text-align: center;
+  font-family: 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: clamp(18px, 5.6vw, 26px);
+  color: var(--cream);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.15),
+    0 -1px 1px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.header-plate__rivet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3e9c8 0%, #b89a64 45%, #5c3f22 80%, #2a1c0f 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+.header-plate__rivet::before,
+.header-plate__rivet::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.header-plate__rivet::before { width: 60%; height: 1px; transform: translate(-50%, -50%); }
+.header-plate__rivet::after { width: 1px; height: 60%; transform: translate(-50%, -50%); }
+.header-plate__rivet--tl { top: 6px; left: 8px; }
+.header-plate__rivet--tr { top: 6px; right: 8px; }
+.header-plate__rivet--bl { bottom: 6px; left: 8px; }
+.header-plate__rivet--br { bottom: 6px; right: 8px; }
+
+/* --------------------------------------------------------------------------
+   5. CUERPO PRINCIPAL — columna de botones + pantalla
+   -------------------------------------------------------------------------- */
+.console__body {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  min-height: 0;
+  padding-bottom: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   6. COLUMNA DE BOTONES
+   -------------------------------------------------------------------------- */
+.controls {
+  flex: 0 0 30%;
+  max-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  appearance: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  display: block;
+  width: 100%;
+  min-height: 0;
+}
+
+/* BASES y PROGRAMA son los botones principales: ocupan más altura.
+   POSTULAR es deliberadamente más chico, como en la consola de referencia. */
+.btn--bases,
+.btn--programa {
+  flex: 0 0 26%;
+}
+.btn--postular {
+  flex: 0 0 13%;
+}
+
+/* Chapa ciega que completa la columna de mandos hasta la altura de la
+   pantalla, igual que en la consola física de referencia. */
+.controls__filler {
+  flex: 1;
+  min-height: 18px;
+  background: linear-gradient(155deg, #2e312f 0%, #1c1e1c 60%, #131413 100%);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 2px 3px rgba(255, 255, 255, 0.05),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0;
+}
+.controls__filler-bolt {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3e9c8 0%, #a3895a 55%, #4a3520 100%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+}
+.controls__filler-slit {
+  width: 60%;
+  height: 2px;
+  border-radius: 1px;
+  background: #0a0a09;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.btn__frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: linear-gradient(155deg, #34372f 0%, #23251f 60%, #1a1c17 100%);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 2px 3px rgba(255, 255, 255, 0.06),
+    inset 0 -5px 10px rgba(0, 0, 0, 0.55),
+    0 3px 6px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+}
+
+.btn__frame--small { padding: 8px; }
+
+.btn__bolt {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3e9c8 0%, #b89a64 45%, #5c3f22 80%, #2a1c0f 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+.btn__bolt::before,
+.btn__bolt::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.btn__bolt::before { width: 60%; height: 1px; transform: translate(-50%, -50%); }
+.btn__bolt::after { width: 1px; height: 60%; transform: translate(-50%, -50%); }
+.btn__bolt--tl { top: 6px; left: 6px; }
+.btn__bolt--tr { top: 6px; right: 6px; }
+.btn__bolt--bl { bottom: 6px; left: 6px; }
+.btn__bolt--br { bottom: 6px; right: 6px; }
+
+.btn__face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+/* Anillo de bisel metálico (aluminio cepillado) compartido por las tres
+   caras de botón: separa la chapa oscura del marco de la cara de color,
+   tal como en la foto de referencia. Se arma apilando box-shadows. */
+:root {
+  --bezel-ring:
+    0 0 0 2px #100f0d,
+    0 0 0 3px #8d8d83,
+    0 0 0 4px #4d4d46,
+    0 0 0 5px #0c0c0b;
+}
+
+/* Botón BASES — circular, rojo, tipo botón de emergencia */
+.btn__face--round {
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  width: 72%;
+  margin: 0 auto;
+  background: radial-gradient(circle at 35% 28%, #ed7257 0%, var(--red-1) 42%, var(--red-3) 100%);
+  box-shadow:
+    var(--bezel-ring),
+    inset 0 4px 5px rgba(255, 255, 255, 0.4),
+    inset 0 -7px 12px rgba(0, 0, 0, 0.55),
+    0 5px 0 #100f0d,
+    0 8px 12px rgba(0, 0, 0, 0.65);
+  border: 1px solid #1a0a05;
+}
+
+/* Botón PROGRAMA — rectangular azul */
+.btn__face--square {
+  border-radius: 6px;
+  width: 92%;
+  height: 92%;
+  margin: 0 auto;
+  background: linear-gradient(155deg, #4a92c4 0%, var(--blue-1) 42%, var(--blue-3) 100%);
+  box-shadow:
+    var(--bezel-ring),
+    inset 0 4px 5px rgba(255, 255, 255, 0.35),
+    inset 0 -7px 12px rgba(0, 0, 0, 0.5),
+    0 5px 0 #100f0d,
+    0 8px 12px rgba(0, 0, 0, 0.6);
+  border: 1px solid #07131d;
+}
+
+/* Botón POSTULAR — rectangular crema */
+.btn__face--cream {
+  border-radius: 6px;
+  width: 92%;
+  height: 92%;
+  margin: 0 auto;
+  background: linear-gradient(155deg, #f5eed8 0%, var(--cream) 48%, #b8ad8c 100%);
+  box-shadow:
+    var(--bezel-ring),
+    inset 0 3px 4px rgba(255, 255, 255, 0.65),
+    inset 0 -6px 10px rgba(0, 0, 0, 0.22),
+    0 4px 0 #100f0d,
+    0 6px 10px rgba(0, 0, 0, 0.55);
+  border: 1px solid #5a5239;
+}
+
+.btn__label {
+  font-family: 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  font-size: clamp(11px, 3.4vw, 14px);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.btn--bases .btn__label { color: var(--cream); text-shadow: 0 1px 1px rgba(0,0,0,0.5); }
+.btn--programa .btn__label { color: var(--cream); text-shadow: 0 1px 1px rgba(0,0,0,0.5); }
+.btn--postular .btn__label { color: var(--red-2); }
+
+.btn__tick {
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.7;
+}
+.btn--bases .btn__tick { background: var(--cream); }
+.btn--postular .btn__tick { background: var(--red-2); }
+
+.btn__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 60%;
+}
+.btn__lines span {
+  height: 2px;
+  background: var(--cream);
+  opacity: 0.8;
+}
+.btn__lines span:last-child { width: 70%; align-self: center; }
+
+/* Estados de interacción: presión física del botón */
+.btn:active .btn__face,
+.btn.is-pressed .btn__face {
+  transform: translateY(3px);
+}
+.btn--bases:active .btn__face--round,
+.btn--bases.is-pressed .btn__face--round {
+  box-shadow:
+    var(--bezel-ring),
+    inset 0 3px 6px rgba(0, 0, 0, 0.5),
+    0 1px 0 #100f0d;
+}
+.btn--programa:active .btn__face--square,
+.btn--programa.is-pressed .btn__face--square {
+  box-shadow:
+    var(--bezel-ring),
+    inset 0 3px 6px rgba(0, 0, 0, 0.5),
+    0 1px 0 #100f0d;
+}
+.btn--postular:active .btn__face--cream,
+.btn--postular.is-pressed .btn__face--cream {
+  box-shadow:
+    var(--bezel-ring),
+    inset 0 3px 6px rgba(0, 0, 0, 0.3),
+    0 1px 0 #100f0d;
+}
+
+.btn:focus-visible .btn__frame {
+  outline: 2px solid var(--crt-green);
+  outline-offset: 2px;
+}
+
+/* Bloquea botones durante el arranque del sistema */
+.console.is-booting .controls {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   7. PANTALLA CRT
+   -------------------------------------------------------------------------- */
+.crt {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.crt__bezel {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  /* Bisel grueso tipo tubo de TV: varios anillos metálicos concéntricos */
+  background: linear-gradient(155deg, #3a3c39 0%, #202120 45%, #101110 100%);
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid #050505;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 0 0 5px #15160f,
+    inset 0 0 0 6px rgba(255, 255, 255, 0.05),
+    inset 0 3px 6px rgba(255, 255, 255, 0.08),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.65),
+    0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.crt__bezel-rivet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3e9c8 0%, #b89a64 45%, #5c3f22 80%, #2a1c0f 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+}
+.crt__bezel-rivet::before,
+.crt__bezel-rivet::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.crt__bezel-rivet::before { width: 60%; height: 1px; transform: translate(-50%, -50%); }
+.crt__bezel-rivet::after { width: 1px; height: 60%; transform: translate(-50%, -50%); }
+.crt__bezel-rivet--tl { top: 8px; left: 8px; }
+.crt__bezel-rivet--tr { top: 8px; right: 8px; }
+.crt__bezel-rivet--bl { bottom: 8px; left: 8px; }
+.crt__bezel-rivet--br { bottom: 8px; right: 8px; }
+
+.crt__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--crt-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.9),
+    inset 0 0 8px rgba(0, 0, 0, 1);
+  /* Curvatura simulada de un tubo CRT */
+  transform: perspective(600px) rotateX(0.3deg);
+}
+
+/* Texto del terminal.
+   IMPORTANTE: se posiciona "absolute" con inset:0 (en vez de height:100%)
+   para que el alto quede SIEMPRE acotado a .crt__screen, incluso dentro
+   de cadenas de flexbox anidadas en navegadores móviles (Safari/iOS no
+   siempre resuelve bien height:100% dentro de flex). Así overflow-y:auto
+   funciona de forma confiable y el texto nunca se pierde fuera de vista. */
+.crt__text {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 14px 12px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: clamp(11px, 3.1vw, 13.5px);
+  line-height: 1.5;
+  color: var(--crt-green);
+  text-shadow:
+    0 0 2px var(--crt-glow),
+    0 0 8px var(--crt-glow),
+    0 0 16px rgba(93, 255, 160, 0.25);
+  scrollbar-width: none;
+}
+.crt__text::-webkit-scrollbar { display: none; }
+
+/* Modo "mensaje grande": pantalla tipo cartel, usada por POSTULAR para
+   mostrar "LINK DE POSTULACIÓN EN BIO" centrado y en letra enorme. */
+.crt__text.is-big {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  /* Tamaño más conservador para que "POSTULACIÓN" entre completa en una
+     sola línea, sin cortarse, incluso en pantallas angostas. */
+  font-size: clamp(16px, 6.6vw, 27px);
+  line-height: 1.3;
+  letter-spacing: 0;
+  /* Nunca partir una palabra al medio: si no entra, se ve completa igual,
+     gracias al font-size ya acotado arriba. */
+  word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: none;
+  text-shadow:
+    0 0 4px var(--crt-glow),
+    0 0 14px var(--crt-glow),
+    0 0 26px rgba(93, 255, 160, 0.35);
+}
+
+.crt__text .cursor {
+  display: inline-block;
+  background: var(--crt-green);
+  color: var(--crt-bg);
+  animation: blink 0.9s steps(1) infinite;
+  box-shadow: 0 0 6px var(--crt-glow);
+}
+
+/* Scanlines (líneas horizontales del tubo) */
+.crt__scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.32) 0px,
+    rgba(0, 0, 0, 0.32) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* Barrido de brillo que recorre la pantalla */
+.crt__sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(93, 255, 160, 0) 0%,
+    rgba(93, 255, 160, 0.06) 50%,
+    rgba(93, 255, 160, 0) 100%
+  );
+  animation: sweep 6s linear infinite;
+}
+
+/* Viñeta para oscurecer bordes, simulando el tubo curvo */
+.crt__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* Brillo de vidrio (reflejo superior) */
+.crt__glass-glare {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 70%;
+  height: 50%;
+  z-index: 6;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 70%);
+  transform: rotate(-8deg);
+}
+
+.crt__label {
+  margin-top: 6px;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: #6b6e68;
+  text-align: center;
+}
+
+/* Pantalla apagada (estado inicial) */
+.crt__screen.is-off {
+  background: #010302;
+}
+.crt__screen.is-off .crt__text,
+.crt__screen.is-off .crt__sweep,
+.crt__screen.is-off .crt__glass-glare {
+  opacity: 0;
+}
+
+/* Encendido: contracción vertical típica de un tubo CRT clásico */
+.crt__screen.is-powering-on {
+  animation: power-on 0.5s ease-out;
+}
+
+/* Parpadeo leve y constante (flicker) */
+.crt__screen.is-on .crt__text {
+  animation: flicker 4.2s infinite;
+}
+
+/* Glitch ocasional más fuerte */
+.crt__screen.glitch {
+  animation: glitch-shift 0.18s steps(2);
+}
+
+/* --------------------------------------------------------------------------
+   8. PANEL INFERIOR — rejillas y placa identificatoria
+   -------------------------------------------------------------------------- */
+.console__footer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  padding: 8px 0;
+}
+
+.vents {
+  position: relative;
+  /* z-index alto: el sticker sobresale del borde de la rejilla y, sin esto,
+     quedaba tapado por la placa id-plate (siguiente hermano en el flex). */
+  z-index: 3;
+  flex: 0 0 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(155deg, #2c2e2c, #161716);
+  border-radius: 6px;
+  padding: 8px 6px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.vents span {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: #0a0a09;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Calcomanía de sponsor pegada sobre la chapa de rejillas: ligeramente
+   torcida y gastada, como una pegatina real sobre metal. */
+.sticker {
+  position: absolute;
+  z-index: 4;
+  /* Sin offset negativo en "bottom": un valor negativo ahí hacía que el
+     sticker cayera sobre el zócalo inferior (console__base), que se pinta
+     encima por ser un hermano posterior con el mismo z-index, y quedaba
+     tapado. Lo dejamos contenido dentro del propio panel de rejillas. */
+  bottom: 3px;
+  right: -7px;
+  width: 26px;
+  height: 26px;
+  transform: rotate(-9deg);
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.7));
+  opacity: 0.95;
+}
+.sticker svg { width: 100%; height: 100%; }
+
+.id-plate {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  gap: 7px;
+  background: linear-gradient(180deg, #efe9d4 0%, #ddd5b9 55%, #cdc4a3 100%);
+  border: 1px solid #6b6450;
+  border-radius: 5px;
+  padding: 9px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.45);
+  color: var(--red-2);
+  font-family: Georgia, 'Times New Roman', serif;
+  overflow: hidden;
+}
+
+/* Remaches de bronce en las cuatro esquinas de la placa, como en la foto */
+.id-plate__bolt {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3e9c8 0%, #b89a64 45%, #5c3f22 80%, #2a1c0f 100%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+.id-plate__bolt--tl { top: 4px; left: 4px; }
+.id-plate__bolt--tr { top: 4px; right: 4px; }
+.id-plate__bolt--bl { bottom: 4px; left: 4px; }
+.id-plate__bolt--br { bottom: 4px; right: 4px; }
+
+/* Bloque "Ra · Co": caja con doble filete rojo (border + outline separados) */
+.id-plate__codex {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--red-2);
+  outline: 1px solid var(--red-2);
+  outline-offset: 2px;
+  margin: 2px;
+  padding: 4px 8px;
+}
+
+.id-plate__col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1px;
+  padding: 0 6px;
+}
+
+.id-plate__tag {
+  font-size: 7.5px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.id-plate__tag strong { font-size: 8.5px; }
+
+.id-plate__big {
+  font-weight: 700;
+  font-size: clamp(20px, 6vw, 27px);
+  line-height: 1;
+  margin-top: 1px;
+}
+
+/* Doble línea vertical (dos filetes muy juntos) separando "Ra" de "Co" */
+.id-plate__col-divider {
+  flex: 0 0 auto;
+  width: 4px;
+  align-self: stretch;
+  background-image: linear-gradient(
+    to right,
+    var(--red-2) 0,
+    var(--red-2) 1px,
+    transparent 1px,
+    transparent 3px,
+    var(--red-2) 3px,
+    var(--red-2) 4px
+  );
+  opacity: 0.85;
+}
+
+.id-plate__ministry {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--red-2);
+  padding: 5px 7px;
+  margin: 2px 2px 2px 0;
+}
+.id-plate__emblem {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 27px;
+  color: var(--red-2);
+}
+.id-plate__emblem svg { width: 100%; height: 100%; }
+.id-plate__ministry-copy {
+  flex: 1;
+  min-width: 0;
+}
+.id-plate__ministry-text {
+  font-weight: 700;
+  font-size: 7.6px;
+  line-height: 1.28;
+}
+.id-plate__gov {
+  display: block;
+  font-weight: 700;
+  font-size: 7.6px;
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   9. ZÓCALO / BASE INFERIOR
+   -------------------------------------------------------------------------- */
+.console__base {
+  position: relative;
+  z-index: 2;
+  height: 26px;
+  margin: 0 -10px;
+  background: linear-gradient(180deg, #181917 0%, #0c0d0c 100%);
+  border-top: 2px solid #000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+}
+.console__base-vent {
+  width: 16px;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #050505 0 2px, #1c1d1b 2px 4px);
+  border-radius: 1px;
+}
+.console__base-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   10. ANIMACIONES
+   -------------------------------------------------------------------------- */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes sweep {
+  0% { top: -40%; }
+  100% { top: 100%; }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.82; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+
+@keyframes glitch-shift {
+  0% { transform: translateX(0); filter: brightness(1); }
+  25% { transform: translateX(-1.5px); filter: brightness(1.4); }
+  50% { transform: translateX(1.5px); filter: brightness(0.85); }
+  75% { transform: translateX(-1px); filter: brightness(1.2); }
+  100% { transform: translateX(0); filter: brightness(1); }
+}
+
+@keyframes power-on {
+  0% { transform: scaleY(0.02) scaleX(0.9); filter: brightness(3); opacity: 0; }
+  15% { opacity: 1; }
+  35% { transform: scaleY(1.05) scaleX(1.01); filter: brightness(2.2); }
+  60% { transform: scaleY(0.96); filter: brightness(1.4); }
+  100% { transform: scaleY(1) scaleX(1); filter: brightness(1); }
+}
+
+/* --------------------------------------------------------------------------
+   11. RESPONSIVE — prioridad mobile 9:16, adaptado a escritorio
+   -------------------------------------------------------------------------- */
+
+/* Escritorio: la consola flota centrada, como un mueble físico */
+@media (min-width: 640px) {
+  body {
+    background: radial-gradient(ellipse at 50% 40%, #141513 0%, #050505 70%);
+  }
+  .console {
+    width: 430px;
+    height: min(92vh, 900px);
+    border-radius: 22px;
+  }
+}
+
+/* Pantallas muy pequeñas: compactar paddings */
+@media (max-width: 360px), (max-height: 620px) {
+  .console { padding: 6px 6px 0; }
+  .header-plate { margin: 4px 2px 6px; }
+  .header-plate__frame { padding: 10px 8px; }
+  .console__body { gap: 6px; }
+  .controls { gap: 6px; }
+  .console__footer { padding: 6px 0; }
+}
+
+/* Orientación horizontal en celulares: priorizar la pantalla */
+@media (orientation: landscape) and (max-height: 500px) {
+  .console { max-width: 380px; height: 96dvh; }
+  .id-plate__ministry-text { display: none; }
+}
+
+/* Reducir animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .crt__sweep,
+  .crt__screen.is-on .crt__text,
+  .crt__text .cursor {
+    animation: none !important;
+  }
+}
