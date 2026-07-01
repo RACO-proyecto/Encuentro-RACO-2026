@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<!-- Evita zoom y asegura que la consola ocupe toda la pantalla del celular -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0c0d0c">
+<title>RACO TERMINAL — 2do Encuentro RACO 2026</title>
+<meta name="description" content="Terminal de convocatoria — 2do Encuentro RACO 2026. Arte y Comunidades para la Innovación y Diálogo Socio-Cultural.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Fondo exterior: ambiente tipo sala de control / taller -->
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       CONSOLA — carcasa física de la terminal
+       ============================================================ -->
+  <main class="console" id="console">
+
+    <!-- Tornillos superiores de la carcasa -->
+    <div class="bolt-row bolt-row--top" aria-hidden="true">
+      <span class="bolt"></span><span class="bolt"></span>
+      <span class="bolt"></span><span class="bolt"></span>
+    </div>
+
+    <!-- Placa superior roja con el nombre del encuentro -->
+    <header class="header-plate">
+      <div class="header-plate__frame">
+        <span class="header-plate__rivet header-plate__rivet--tl" aria-hidden="true"></span>
+        <span class="header-plate__rivet header-plate__rivet--tr" aria-hidden="true"></span>
+        <h1 class="header-plate__title">ENCUENTRO&nbsp;RACO&nbsp;2026</h1>
+        <span class="header-plate__rivet header-plate__rivet--bl" aria-hidden="true"></span>
+        <span class="header-plate__rivet header-plate__rivet--br" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <!-- Cuerpo principal: columna de mandos + pantalla -->
+    <div class="console__body">
+
+      <!-- Columna de botones de comando -->
+      <nav class="controls" aria-label="Comandos del terminal RACO">
+
+        <!-- BASES -->
+        <button id="btn-bases" class="btn btn--bases" type="button" aria-label="Mostrar bases de la convocatoria">
+          <span class="btn__frame">
+            <span class="btn__bolt btn__bolt--tl" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--tr" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--bl" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--br" aria-hidden="true"></span>
+            <span class="btn__face btn__face--round">
+              <span class="btn__label">BASES</span>
+              <span class="btn__tick" aria-hidden="true"></span>
+            </span>
+          </span>
+        </button>
+
+        <!-- PROGRAMA -->
+        <button id="btn-programa" class="btn btn--programa" type="button" aria-label="Mostrar programa del encuentro">
+          <span class="btn__frame">
+            <span class="btn__bolt btn__bolt--tl" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--tr" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--bl" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--br" aria-hidden="true"></span>
+            <span class="btn__face btn__face--square">
+              <span class="btn__label">PROGRAMA</span>
+              <span class="btn__lines" aria-hidden="true"><span></span><span></span></span>
+            </span>
+          </span>
+        </button>
+
+        <!-- POSTULAR -->
+        <button id="btn-postular" class="btn btn--postular" type="button" aria-label="Ver información de postulación">
+          <span class="btn__frame btn__frame--small">
+            <span class="btn__bolt btn__bolt--tl" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--tr" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--bl" aria-hidden="true"></span>
+            <span class="btn__bolt btn__bolt--br" aria-hidden="true"></span>
+            <span class="btn__face btn__face--cream">
+              <span class="btn__label">POSTULAR</span>
+              <span class="btn__tick" aria-hidden="true"></span>
+            </span>
+          </span>
+        </button>
+
+        <!-- Panel ciego de relleno: completa la columna como chapa de metal -->
+        <div class="controls__filler" aria-hidden="true">
+          <span class="controls__filler-bolt"></span>
+          <span class="controls__filler-slit"></span>
+          <span class="controls__filler-slit"></span>
+          <span class="controls__filler-bolt"></span>
+        </div>
+      </nav>
+
+      <!-- Pantalla CRT -->
+      <div class="crt" id="crt">
+        <div class="crt__bezel">
+          <span class="crt__bezel-rivet crt__bezel-rivet--tl" aria-hidden="true"></span>
+          <span class="crt__bezel-rivet crt__bezel-rivet--tr" aria-hidden="true"></span>
+          <span class="crt__bezel-rivet crt__bezel-rivet--bl" aria-hidden="true"></span>
+          <span class="crt__bezel-rivet crt__bezel-rivet--br" aria-hidden="true"></span>
+
+          <div class="crt__screen" id="screen">
+            <!-- Capa de texto del terminal -->
+            <pre class="crt__text" id="terminal-output" role="status" aria-live="polite"></pre>
+
+            <!-- Capas de efecto CRT (encima del texto) -->
+            <div class="crt__scanlines" aria-hidden="true"></div>
+            <div class="crt__sweep" aria-hidden="true"></div>
+            <div class="crt__vignette" aria-hidden="true"></div>
+            <div class="crt__glass-glare" aria-hidden="true"></div>
+          </div>
+        </div>
+        <span class="crt__label">MONITOR · RC-27</span>
+      </div>
+    </div>
+
+    <!-- Panel inferior: rejillas + placa identificatoria -->
+    <div class="console__footer">
+      <div class="vents" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+
+        <!-- Calcomanía pegada a la chapa, como en una máquina real -->
+        <span class="sticker" aria-label="Logo 7up">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="30" fill="#d81f33"/>
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#f4ead0" stroke-width="1.4"/>
+            <text x="32" y="31" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-weight="700" font-size="22" fill="#f4ead0">7up</text>
+            <path d="M9 41 Q32 53 55 41" stroke="#3aa35a" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="id-plate">
+        <span class="id-plate__bolt id-plate__bolt--tl" aria-hidden="true"></span>
+        <span class="id-plate__bolt id-plate__bolt--tr" aria-hidden="true"></span>
+        <span class="id-plate__bolt id-plate__bolt--bl" aria-hidden="true"></span>
+        <span class="id-plate__bolt id-plate__bolt--br" aria-hidden="true"></span>
+
+        <!-- Bloque "Ra · Co" con doble filete rojo, igual que la placa real -->
+        <div class="id-plate__codex">
+          <div class="id-plate__col">
+            <span class="id-plate__tag">imagen&nbsp;<strong>88</strong></span>
+            <span class="id-plate__big">Ra</span>
+          </div>
+          <span class="id-plate__col-divider" aria-hidden="true"></span>
+          <div class="id-plate__col">
+            <span class="id-plate__tag">encuentro&nbsp;<strong>27</strong></span>
+            <span class="id-plate__big">Co</span>
+          </div>
+        </div>
+
+        <!-- Bloque ministerial, con su propio filete -->
+        <div class="id-plate__ministry">
+          <div class="id-plate__emblem" aria-hidden="true">
+            <!-- Aproximación del Escudo Nacional de Chile (silueta simplificada) -->
+            <svg viewBox="0 0 60 68" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 2 L46 9 V28 C46 43 39 54 30 60 C21 54 14 43 14 28 V9 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+              <line x1="30" y1="9" x2="30" y2="54" stroke="currentColor" stroke-width="1"/>
+              <path d="M19 17 H41" stroke="currentColor" stroke-width="1"/>
+              <path d="M30 2 L25 9 H35 Z" fill="currentColor"/>
+              <circle cx="30" cy="13" r="2.2" fill="currentColor"/>
+              <path d="M14 22 C8 20 4 15 3 8 C8 8 13 12 15 18 Z" fill="currentColor"/>
+              <path d="M46 22 C52 20 56 15 57 8 C52 8 47 12 45 18 Z" fill="currentColor"/>
+              <path d="M11 36 C6 38 3 43 3 49 C8 48 12 44 13 39 Z" fill="currentColor"/>
+              <path d="M49 36 C54 38 57 43 57 49 C52 48 48 44 47 39 Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="id-plate__ministry-copy">
+            <p class="id-plate__ministry-text">Ministerio de las Culturas,<br>las Artes y el Patrimonio</p>
+            <span class="id-plate__gov">Gobierno de Chile</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zócalo / base inferior de la carcasa -->
+    <div class="console__base" aria-hidden="true">
+      <span class="console__base-vent"></span>
+      <span class="console__base-vent"></span>
+      <span class="console__base-vent"></span>
+      <span class="console__base-line"></span>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
